@@ -1,0 +1,8 @@
+frameFile=port_back.png
+glareFile=port_glare.png
+shadowFile=port_shadow.png
+screenWidth=1080
+screenHeight=1920
+screenOffsetX=147
+screenOffsetY=233
+zoomFactor=85%
