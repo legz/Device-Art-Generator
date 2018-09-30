@@ -26,7 +26,7 @@ init () {
 ### Core 
 createScreenshots () {
 	echo "$(date "+%D-%T") - Start screen arts creation"
-	#setProps ${device}
+	
 	local i=0 # Used for backgrounds id
 	for screenshot in $(find ./${imagesFolder}/0-raw/ -maxdepth 1 -type f | sort); do
 		filename=$(basename -- "${screenshot%.*}")
@@ -140,17 +140,6 @@ listDevices () {
 		echo "  - $device"
 	done
 	echo "Check the 'devices' folder for more details."
-}
-
-setProps () {
-	local device=$1
-	deviceFilesPath="./${devicesFolder}/${device}/"
-	unset aProps && declare -gA aProps
-	while read prop || [ -n "$prop" ]; do 	# [ -n "$prop" ] is for the last line. 'read' only considers lines ending with a "newline" char.
-		propName=$(echo "$prop" | cut -d"=" -f1)
-		propValue=$(echo "$prop" | cut -d"=" -f2)
-		aProps+=([${propName}]="${propValue}")
-	done < ${deviceFilesPath}${devicesPropFile}
 }
 
 listBackgrounds () {
