@@ -16,7 +16,11 @@ init () {
 
 	# Check available devices
 	declare -ga aDevice
-	for item in $(find ./${devicesFolder}/* -maxdepth 0 -type d); do aDevice+=$(echo "${item}" | cut -d"/" -f3); done
+
+	devicesList=$(./${devicesFolder}/jq -r '.[] | .id' ./${devicesFolder}/$devicesPropFile)
+	for device in $devicesList; do
+		if [ -d "./${devicesFolder}/$device" ]; then aDevice+=("$device"); fi
+	done
 }
 
 ### Core 
@@ -70,15 +74,15 @@ createScreenshots () {
 
 ### Utilities functions
 usage () {
-	echo "Available options :"
+	echo "Available options:"
     echo "  -d [device_id]	: Device used for framing ($defaultDevice by default)"
-    echo "  -m [download|list]	: Manage devices :"
+    echo "  -m [download|list]	: Manage devices:"
     echo "				- Download them from Android dev website."
     echo "				- List the available ones."
 }
 
 manageDevices () {
-	read -p "What would you like to do with device? [download|list] : " option
+	read -p $'What would you like to do regarding devices? [\e[4md\e[0mownload|[\e[4ml\e[0mist]: ' option
 	case "$option" in
 		'download'|'d')	downloadDevices ;;
 		'list'|'l')		listDevices ;;
@@ -109,7 +113,7 @@ listDevices () {
 	for device in "${aDevice[@]}"; do
 		echo "  - $device"
 	done
-	echo "Check de 'devices' folder for more details."
+	echo "Check the 'devices' folder for more details."
 }
 
 setProps () {
