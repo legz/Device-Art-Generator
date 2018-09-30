@@ -2,14 +2,13 @@
 
 ### Script settings
 defaultDevice="Nexus5X"
-devicesPropFile="properties"
+devicesPropFile="devices_properties.json"
 devicesFolder="devices"
 screenshotsFolder="screenshots"
 backgroundsFolder="backgrounds"
 
 ### Script init
 init () {
-	echo "$(date "+%D-%T") - Start screen arts creation"
 	rm -rf tmp
 	device=${defaultDevice}
 	targetWidth=1080
@@ -17,15 +16,12 @@ init () {
 
 	# Check available devices
 	declare -ga aDevice
-	for item in ./${devicesFolder}/*; do
-		if [[ -f ${item}/${devicesPropFile} ]]; then
-			aDevice+=$(echo "${item}" | cut -d"/" -f3)
-		fi			
-	done
+	for item in $(find ./${devicesFolder}/* -maxdepth 0 -type d); do aDevice+=$(echo "${item}" | cut -d"/" -f3); done
 }
 
 ### Core 
 createScreenshots () {
+	echo "$(date "+%D-%T") - Start screen arts creation"
 	setProps ${device}
 	local i=0 # Used for backgrounds id
 	for screenshot in $(find ./${screenshotsFolder}/0-raw/ -maxdepth 1 -type f | sort); do
@@ -75,7 +71,37 @@ createScreenshots () {
 ### Utilities functions
 usage () {
 	echo "Available options :"
-    echo "	-d [device]	: Device used for framing ($defaultDevice by default)"
+    echo "  -d [device_id]	: Device used for framing ($defaultDevice by default)"
+    echo "  -m [download|list]	: Manage devices :"
+    echo "				- Download them from Android dev website."
+    echo "				- List the available ones."
+}
+
+manageDevices () {
+	read -p "What would you like to do with device? [download|list] : " option
+	case "$option" in
+		'download'|'d')	downloadDevices ;;
+		'list'|'l')		listDevices ;;
+		*) 				echo "Sorry, the '$option' option is not available."; exit 1 ;;
+	esac
+}
+
+downloadDevices () {
+	devicesList=$(./${devicesFolder}/jq -r '.[] | .id' ./${devicesFolder}/$devicesPropFile)
+	i=0
+	for device in $devicesList; do
+		echo " Downloading ressources for '$device'."
+		for orientation in port land; do
+			resTypes=$(./${devicesFolder}/jq -r ".[] | select(.id==\"$device\") | .${orientation}Res[]" ./${devicesFolder}/$devicesPropFile)
+			for resType in $resTypes; do
+ 				mkdir -p ./${devicesFolder}/$device
+				filename="${orientation}_${resType}.png"
+				curl -s -m 2 "https://android-dot-google-developers.appspot.com/distribute/marketing-tools/device-art-resources/pixel_2_xl/$filename" > ./${devicesFolder}/${device}/$filename
+			done
+		done
+		i=$((i+1))
+	done
+	echo "Finished. $i devices downloaded."
 }
 
 listDevices () {
@@ -120,12 +146,12 @@ listBackgrounds () {
 
 ### Run the script
 init
-while getopts ":d:lh" optname; do
+while getopts ":d:mh" optname; do
     case ${optname} in
       d)	device=${OPTARG}  ;;
-	  l)	listDevices; exit 0 ;;
+	  m)	manageDevices; exit 0 ;;
 	  h)	usage; exit 0 ;;
-      \?) 	echo "Invalid option -${OPTARG}."; usage; exit 1 ;;
+      \?) 	echo "The '-${OPTARG}' option is invalid."; usage; exit 1 ;;
       :)	echo "Option -${OPTARG} requires an argument. Try -h for help."; exit 1 ;;
       *)	echo "Unknown error while processing options"; usage; exit 1 ;;
     esac
