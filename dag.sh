@@ -17,7 +17,7 @@ init () {
 	# Check available devices
 	declare -ga aDevice
 
-	devicesList=$(./${devicesFolder}/jq -r '.[] | .id' ./${devicesFolder}/$devicesPropFile)
+	devicesList=$(jq -r '.[] | .id' ./${devicesFolder}/$devicesPropFile)
 	for item in $devicesList; do
 		if [ -d "./${devicesFolder}/$item" ]; then aDevice+=("$item"); fi
 	done
@@ -117,12 +117,12 @@ manageDevices () {
 }
 
 downloadDevices () {
-	devicesList=$(./${devicesFolder}/jq -r '.[] | .id' ./${devicesFolder}/$devicesPropFile)
+	devicesList=$(jq -r '.[] | .id' ./${devicesFolder}/$devicesPropFile)
 	i=0
 	for device in $devicesList; do
 		echo " Downloading ressources for '$device'."
 		for orientation in port land; do
-			resTypes=$(./${devicesFolder}/jq -r ".[] | select(.id==\"$device\") | .${orientation}Res[]" ./${devicesFolder}/$devicesPropFile)
+			resTypes=$(jq -r ".[] | select(.id==\"$device\") | .${orientation}Res[]" ./${devicesFolder}/$devicesPropFile)
 			for resType in $resTypes; do
  				mkdir -p ./${devicesFolder}/$device
 				filename="${orientation}_${resType}.png"
