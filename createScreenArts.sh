@@ -96,7 +96,7 @@ downloadDevices () {
 			for resType in $resTypes; do
  				mkdir -p ./${devicesFolder}/$device
 				filename="${orientation}_${resType}.png"
-				curl -s -m 2 "https://android-dot-google-developers.appspot.com/distribute/marketing-tools/device-art-resources/pixel_2_xl/$filename" > ./${devicesFolder}/${device}/$filename
+				curl -s -m 2 "https://android-dot-google-developers.appspot.com/distribute/marketing-tools/device-art-resources/$device/$filename" > ./${devicesFolder}/${device}/$filename
 			done
 		done
 		i=$((i+1))
