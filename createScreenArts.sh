@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ### Script settings
-defaultDevice="Nexus5X"
+defaultDevice="nexus_5x"
 devicesPropFile="devices_properties.json"
 devicesFolder="devices"
-screenshotsFolder="screenshots"
-backgroundsFolder="backgrounds"
+imagesFolder="images"
+backgroundsFolder="$imagesFolder/backgrounds"
 
 ### Script init
 init () {
@@ -18,56 +18,82 @@ init () {
 	declare -ga aDevice
 
 	devicesList=$(./${devicesFolder}/jq -r '.[] | .id' ./${devicesFolder}/$devicesPropFile)
-	for device in $devicesList; do
-		if [ -d "./${devicesFolder}/$device" ]; then aDevice+=("$device"); fi
+	for item in $devicesList; do
+		if [ -d "./${devicesFolder}/$item" ]; then aDevice+=("$item"); fi
 	done
 }
 
 ### Core 
 createScreenshots () {
 	echo "$(date "+%D-%T") - Start screen arts creation"
-	setProps ${device}
+	#setProps ${device}
 	local i=0 # Used for backgrounds id
-	for screenshot in $(find ./${screenshotsFolder}/0-raw/ -maxdepth 1 -type f | sort); do
+	for screenshot in $(find ./${imagesFolder}/0-raw/ -maxdepth 1 -type f | sort); do
 		filename=$(basename -- "${screenshot%.*}")
+		deviceFilesPath="./${devicesFolder}/${device}/"
+
+		# Detect orientation
+		if [[ $(identify -format '%[fx:(w>h)]' $screenshot) = "1" ]]; then
+			local orientation="land"
+		else
+			local orientation="port"
+		fi
 
 		# Resize screenshot
-		mkdir -p ./${screenshotsFolder}/1-resized
-		filenameResize="./${screenshotsFolder}/1-resized/${filename}.png"
-		convert $screenshot -resize ${aProps[screenWidth]}x${aProps[screenHeight]} $filenameResize
+		mkdir -p ./${imagesFolder}/1-resized
+		filenameResize="./${imagesFolder}/1-resized/${filename}.png"
+		screenWidth=$(jq -r ".[] | select(.id==\"${device}\") | .${orientation}Size[0]" ./${devicesFolder}/$devicesPropFile)
+		screenHeight=$(jq -r ".[] | select(.id==\"${device}\") | .${orientation}Size[1]" ./${devicesFolder}/$devicesPropFile)
+		convert $screenshot -resize ${screenWidth}x${screenHeight} $filenameResize
 		screenshot=$filenameResize
 
 		# Add frame
-		mkdir -p ./${screenshotsFolder}/2-framed
-		filenameFramed="./${screenshotsFolder}/2-framed/${filename}.png"
-		composite $screenshot ${deviceFilesPath}${aProps[frameFile]} -geometry +${aProps[screenOffsetX]}+${aProps[screenOffsetY]} $filenameFramed
+		mkdir -p ./${imagesFolder}/2-framed
+		filenameFramed="./${imagesFolder}/2-framed/${filename}.png"
+		frameFile="${deviceFilesPath}${orientation}_back.png"
+		screenOffsetX=$(jq -r ".[] | select(.id==\"${device}\") | .${orientation}Offset[0]" ./${devicesFolder}/$devicesPropFile)
+		screenOffsetY=$(jq -r ".[] | select(.id==\"${device}\") | .${orientation}Offset[1]" ./${devicesFolder}/$devicesPropFile)
+		composite $screenshot $frameFile -geometry +$screenOffsetX+$screenOffsetY $filenameFramed
 		screenshot=$filenameFramed
 
 		# Add shadow
-		mkdir -p ./${screenshotsFolder}/3-shadowed
-		filenameShadowed="./${screenshotsFolder}/3-shadowed/${filename}.png"
-		composite -gravity center $screenshot ${deviceFilesPath}${aProps[shadowFile]} $filenameShadowed
+		mkdir -p ./${imagesFolder}/3-shadowed
+		filenameShadowed="./${imagesFolder}/3-shadowed/${filename}.png"
+		shadowFile="${deviceFilesPath}${orientation}_shadow.png"
+		composite -gravity center $screenshot $shadowFile $filenameShadowed
 		screenshot=$filenameShadowed
 
 		# Add glare
-		mkdir -p ./${screenshotsFolder}/4-glared
-		filenameGlared="./${screenshotsFolder}/4-glared/${filename}.png"
-		composite -gravity center ${deviceFilesPath}${aProps[glareFile]} $screenshot $filenameGlared
+		mkdir -p ./${imagesFolder}/4-glared
+		filenameGlared="./${imagesFolder}/4-glared/${filename}.png"
+		glareFile="${deviceFilesPath}${orientation}_fore.png"
+		composite -gravity center $glareFile $screenshot $filenameGlared
 		screenshot=$filenameGlared
 
 		# Add background
 		## resize image before add the background
-		mogrify -resize ${targetWidth}x${targetHeight} $screenshot
-		mogrify -resize ${aProps[zoomFactor]} $screenshot
+		if [[ "$orientation" = "port" ]]; then
+			mogrify -resize ${targetWidth}x${targetHeight} $screenshot
+		else
+			mogrify -resize ${targetHeight}x${targetWidth} $screenshot
+		fi
+		zoomFactor=$(jq -r ".[] | select(.id==\"${device}\") | .zoomFactor" ./${devicesFolder}/$devicesPropFile)
+		mogrify -resize ${zoomFactor}% $screenshot
 				
-		## Add the background
-		mkdir -p ./${screenshotsFolder}/5-final
-		filenameWithBackground="./${screenshotsFolder}/5-final/${filename}.png"
-		backgroundId=$(($i % $backgroundsNumber + 1))
-		composite -gravity center $screenshot ${aBackgrounds[$backgroundId]} $filenameWithBackground
+		## Rotate the background if needed
+		background=${aBackgrounds[$(($i % $backgroundsNumber + 1))]}
+		if [[ $(identify -format '%[fx:(w>h)]' $background) = "1" ]]; then local backgroundOrientation="land"; else local backgroundOrientation="port"; fi
+		if [[ "$orientation" != "$backgroundOrientation" ]]; then
+			mogrify -rotate "90" $background
+		fi
 
-		echo "$(date "+%D-%T") - Screen $i done. ($filename.png)"
+		## Add the background
+		mkdir -p ./${imagesFolder}/5-final
+		filenameWithBackground="./${imagesFolder}/5-final/${filename}.png"
+		composite -gravity center $screenshot $background $filenameWithBackground
+
 		i=$((i+1))
+		echo "$(date "+%D-%T") - Screen $i done. ($filename.png)"
 	done
 }
 
@@ -82,7 +108,7 @@ usage () {
 }
 
 manageDevices () {
-	read -p $'What would you like to do regarding devices? [\e[4md\e[0mownload|[\e[4ml\e[0mist]: ' option
+	read -p $'What would you like to do regarding devices? [\e[4md\e[0mownload|\e[4ml\e[0mist]: ' option
 	case "$option" in
 		'download'|'d')	downloadDevices ;;
 		'list'|'l')		listDevices ;;
@@ -100,7 +126,7 @@ downloadDevices () {
 			for resType in $resTypes; do
  				mkdir -p ./${devicesFolder}/$device
 				filename="${orientation}_${resType}.png"
-				curl -s -m 2 "https://android-dot-google-developers.appspot.com/distribute/marketing-tools/device-art-resources/$device/$filename" > ./${devicesFolder}/${device}/$filename
+				curl -s -m 3 "https://android-dot-google-developers.appspot.com/distribute/marketing-tools/device-art-resources/$device/$filename" > ./${devicesFolder}/${device}/$filename
 			done
 		done
 		i=$((i+1))
@@ -132,14 +158,18 @@ listBackgrounds () {
 	declare -gA aBackgrounds
 	mkdir -p ./${backgroundsFolder}/resized
 
-	for background in $(find ./backgrounds/ -maxdepth 1 -type f -exec file {} \; | grep -oP '^.+: \w+ image' | cut -d":" -f1 | sort); do
+	for background in $(find ./${backgroundsFolder}/ -maxdepth 1 -type f -exec file {} \; | grep -oP '^.+: \w+ image' | cut -d":" -f1 | sort); do
 		i=$((i+1))
 		echo "Preparing background $i... ($background)"
-		## Blur & resize background
+		# Resize background
 		filenameBackground="./${backgroundsFolder}/resized/$(basename -- ${background%.*}).png"
-		convert ${background} -filter Gaussian -resize 90% -define filter:sigma=4 -resize 112%  $filenameBackground 	# Used to blur the image quickly
-		mogrify  -resize ${targetWidth}x${targetHeight}^ -gravity center -extent ${targetWidth}x${targetHeight} $filenameBackground
-		# without blur : convert ${aBackgrounds[$i]} -resize ${targetWidth}x${targetHeight}^ -gravity center -extent ${targetWidth}x${targetHeight} $filenameBackground
+		
+		# Blur version
+		##convert ${background} -filter Gaussian -resize 90% -define filter:sigma=4 -resize 112%  $filenameBackground 	# Used to blur the image quickly
+		##mogrify  -resize ${targetWidth}x${targetHeight}^ -gravity center -extent ${targetWidth}x${targetHeight} $filenameBackground
+		
+		# Simple resize withou blur
+		convert ${background} -resize ${targetWidth}x${targetHeight}^ -gravity center -extent ${targetWidth}x${targetHeight} $filenameBackground
 		
 		# Add background in the list
 		aBackgrounds+=([$i]="${filenameBackground}")

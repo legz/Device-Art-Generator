@@ -5,13 +5,15 @@
   "id": "nexus_5x",
   "landOffset": [485,313],
   "landRes": ["shadow", "back", "fore"],
+  "landSize": [1920,1080],
   "physicalHeight": 5.625,
   "physicalSize": 5.2,
   "portOffset": [305,485],
   "portRes": ["shadow", "back", "fore"],
   "portSize": [1080,1920],
   "title": "Nexus 5X",
-  "url": "https://www.google.com/nexus/5x/"
+  "url": "https://www.google.com/nexus/5x/",
+  "zoomFactor": 95
 },
 {
   "density": "560DPI",
@@ -19,13 +21,15 @@
   "id": "nexus_6",
   "landOffset": [489,327],
   "landRes": ["shadow", "back", "fore"],
+  "landSize": [2560,1440],
   "physicalHeight": 6.27,
   "physicalSize": 6,
   "portOffset": [327,489],
   "portRes": ["shadow", "back", "fore"],
   "portSize": [1440, 2560],
   "title": "Nexus 6",
-  "url": "https://www.google.com/nexus/6/"
+  "url": "https://www.google.com/nexus/6/",
+  "zoomFactor": 85
 },
 {
   "archived": true,
@@ -33,13 +37,15 @@
   "id": "nexus_6p",
   "landOffset": [579,321],
   "landRes": ["shadow", "back", "fore"],
+  "landSize": [2560,1440],
   "physicalHeight": 6.125,
   "physicalSize": 5.7,
   "portOffset": [312,579],
   "portRes": ["shadow", "back", "fore"],
   "portSize": [1440, 2560],
   "title": "Nexus 6P",
-  "url": "https://www.google.com/nexus/6p/"
+  "url": "https://www.google.com/nexus/6p/",
+  "zoomFactor": 85
 },
 {
   "actualResolution": [1536,2048],
@@ -48,13 +54,15 @@
   "id": "nexus_9",
   "landOffset": [514,350],
   "landRes": ["shadow", "back", "fore"],
+  "landSize": [2048,1536],
   "physicalHeight": 8.98,
   "physicalSize": 9,
   "portOffset": [348,514],
   "portRes": ["shadow", "back", "fore"],
   "portSize": [1536,2048],
   "title": "Nexus 9",
-  "url": "https://www.google.com/nexus/9/"
+  "url": "https://www.google.com/nexus/9/",
+  "zoomFactor": 85
 },
 {
   "archived": true,
@@ -62,13 +70,15 @@
   "id": "pixel",
   "landOffset": [541,327],
   "landRes": ["shadow", "back", "fore"],
+  "landSize": [1920,1080],
   "physicalHeight": 5.6,
   "physicalSize": 5,
   "portOffset": [315,541],
   "portRes": ["shadow", "back", "fore"],
   "portSize": [1080, 1920],
   "title": "Pixel",
-  "url": "https://store.google.com/product/pixel_phone"
+  "url": "https://store.google.com/product/pixel_phone",
+  "zoomFactor": 85
 },
 {
   "archived": true,
@@ -76,32 +86,37 @@
   "id": "pixel_xl",
   "landOffset": [581,348],
   "landRes": ["shadow", "back", "fore"],
+  "landSize": [2560,1440],
   "physicalHeight": 6.0,
   "physicalSize": 5.5,
   "portOffset": [337,581],
   "portRes": ["shadow", "back", "fore"],
   "portSize": [1440, 2560],
   "title": "Pixel XL",
-  "url": "https://store.google.com/product/pixel_phone"
+  "url": "https://store.google.com/product/pixel_phone",
+  "zoomFactor": 95
 },
 {
   "density": "441DPI",
   "id": "pixel_2",
   "landOffset": [350, 71],
   "landRes": ["shadow", "back", "fore"],
+  "landSize": [1920,1080],
   "physicalHeight": 5.7,
   "physicalSize": 5,
   "portOffset": [139, 296],
   "portRes": ["shadow", "back", "fore"],
   "portSize": [1080, 1920],
   "title": "Pixel 2",
-  "url": "https://store.google.com/product/pixel_2"
+  "url": "https://store.google.com/product/pixel_2",
+  "zoomFactor": 85
 },
 {
   "density": "538DPI",
   "id": "pixel_2_xl",
   "landOffset": [301, 97],
   "landRes": ["shadow", "back", "fore"],
+  "landSize": [2880,1440],
   "physicalHeight": 6.2,
   "physicalSize": 6,
   "portCornerRadius": 80,
@@ -109,33 +124,38 @@
   "portRes": ["shadow", "back", "fore"],
   "portSize": [1440, 2880],
   "title": "Pixel 2 XL",
-  "url": "https://store.google.com/product/pixel_2"
+  "url": "https://store.google.com/product/pixel_2",
+  "zoomFactor": 85
 },
 {
   "density": "235DPI",
   "id": "pixelbook",
   "landOffset": [519,200],
   "landRes": ["shadow", "back", "fore"],
+  "landSize": [2400,1600],
   "physicalHeight": 8.7,
   "physicalSize": 12.3,
   "portOffset": [380,156],
   "portRes": ["shadow", "back", "fore"],
   "portSize": [1600, 2400],
   "title": "Pixelbook",
-  "url": "https://store.google.com/product/google_pixelbook"
+  "url": "https://store.google.com/product/google_pixelbook",
+  "zoomFactor": 85
 },
 {
   "density": "HDPI",
   "id": "wear",
   "landOffset": [225,206],
   "landRes": ["back"],
+  "landSize": [320,320],
   "physicalHeight": 1.8,
   "physicalSize": 1.8,
   "portOffset": [200,214],
   "portRes": ["back"],
   "portSize": [320,320],
   "title": "Wear OS by Google",
-  "url": "https://www.android.com/wear/"
+  "url": "https://www.android.com/wear/",
+  "zoomFactor": 85
 },
 {
   "density": "HDPI",
@@ -145,11 +165,13 @@
   "physicalSize": 1.8,
   "landOffset": [225,206],
   "landRes": ["back"],
+  "landSize": [320,320],
   "portOffset": [200,214],
   "portRes": ["back"],
   "portSize": [320,320],
   "title": "Wear OS (square)",
-  "url": "https://www.android.com/wear/"
+  "url": "https://www.android.com/wear/",
+  "zoomFactor": 85
 },
 {
   "density": "HDPI",
@@ -157,6 +179,7 @@
   "id": "wear_round",
   "landOffset": [161,167],
   "landRes": ["back"],
+  "landSize": [320,320],
   "physicalHeight": 1.8,
   "physicalSize": 1.8,
   "portCornerRadius": 160,
@@ -164,6 +187,7 @@
   "portRes": ["back"],
   "portSize": [320,320],
   "title": "Wear OS (round)",
-  "url": "https://www.android.com/wear/"
+  "url": "https://www.android.com/wear/",
+  "zoomFactor": 85
 }
 ]
