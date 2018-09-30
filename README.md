@@ -68,7 +68,7 @@ Preparing background 4... (./images/backgrounds/Background4.png)
 ```
 $ ./dag.sh -h
 Available options:
-  -d [device_id]	: Device used for framing (Nexus5X by default)
+  -d [device_id]	: Device used for framing (pixel_xl by default)
   -m [download|list]: Manage devices:
 						- Download them from Android dev website.
 						- List the available ones.

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### Script settings
-defaultDevice="nexus_5x"
+defaultDevice="pixel_xl"
 devicesPropFile="devices_properties.json"
 devicesFolder="devices"
 imagesFolder="images"
