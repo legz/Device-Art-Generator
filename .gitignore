@@ -1,3 +1,4 @@
 devices/*/
-!devices/devices_properties.json
-!devices/jq
+!devices/*
+
+
