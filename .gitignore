@@ -1,4 +1,3 @@
 devices/*/
-!devices/*
-
-
+!devices/devices_properties.json
+images/*
