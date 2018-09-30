@@ -29,7 +29,7 @@
   "portSize": [1440, 2560],
   "title": "Nexus 6",
   "url": "https://www.google.com/nexus/6/",
-  "zoomFactor": 85
+  "zoomFactor": 95
 },
 {
   "archived": true,
@@ -45,7 +45,7 @@
   "portSize": [1440, 2560],
   "title": "Nexus 6P",
   "url": "https://www.google.com/nexus/6p/",
-  "zoomFactor": 85
+  "zoomFactor": 95
 },
 {
   "actualResolution": [1536,2048],
