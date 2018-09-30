@@ -26,7 +26,7 @@ init () {
 ### Core 
 createScreenshots () {
 	echo "$(date "+%D-%T") - Start screen arts creation"
-	
+
 	local i=0 # Used for backgrounds id
 	for screenshot in $(find ./${imagesFolder}/0-raw/ -maxdepth 1 -type f | sort); do
 		filename=$(basename -- "${screenshot%.*}")
@@ -84,7 +84,7 @@ createScreenshots () {
 		background=${aBackgrounds[$(($i % $backgroundsNumber + 1))]}
 		if [[ $(identify -format '%[fx:(w>h)]' $background) = "1" ]]; then local backgroundOrientation="land"; else local backgroundOrientation="port"; fi
 		if [[ "$orientation" != "$backgroundOrientation" ]]; then
-			mogrify -rotate "90" $background
+			mogrify -rotate "-90" $background
 		fi
 
 		## Add the background
