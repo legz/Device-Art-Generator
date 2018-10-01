@@ -20,7 +20,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-This script use:
+This script uses:
 
 - [ImageMagick](https://www.imagemagick.org/script/index.php) to manipulate images
 - [./jq](https://stedolan.github.io/jq/) to process JSON files
@@ -40,6 +40,8 @@ $ git clone https://github.com/legz/Device-Art-Generator.git
 ```
 
 Or download it here: [Repo ZIP file](https://github.com/legz/Device-Art-Generator/archive/master.zip)
+
+That's all!
 
 ### Usage
 
@@ -78,7 +80,7 @@ Available options:
 
 ```
 $ ./dag.sh -m
-What would you like to do regarding devices? [download|[list]: d
+What would you like to do regarding devices? [download|list]: d
  Downloading ressources for 'nexus_5x'.
 ...
  Downloading ressources for 'pixel_2_xl'.
@@ -87,7 +89,7 @@ Finished. 12 devices downloaded.
 
 ```
 $ ./dag.sh -m
-What would you like to do regarding devices? [download|[list]: l
+What would you like to do regarding devices? [download|list]: l
  This available devices are:
   - nexus_5x
 ...
